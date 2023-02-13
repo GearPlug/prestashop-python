@@ -4,15 +4,35 @@ from prestashop.exceptions import UnauthorizedError, WrongFormatInputError, Cont
 
 
 class Client(object):
-
-    def __init__(self, webservice_key, domain, is_subfolder:bool=False, ssl_certificate:bool=False):
+    def __init__(self, webservice_key, domain, is_subfolder: bool = False, ssl_certificate: bool = False):
         protocol = "https" if ssl_certificate else "http"
         sub_url = "prestashop/api/" if is_subfolder else "api/"
         self.URL = f"{protocol}://{domain}/{sub_url}"
-        self.params = {"output_format": "JSON","ws_key": webservice_key}
+        self.params = {"output_format": "JSON", "ws_key": webservice_key}
 
     def check_api_features(self):
         return self.get("")
+
+    def list_customers(
+        self,
+        filter_field=None,
+        filter_operator=None,
+        filter_value=None,
+        is_date_filter=False,
+        sort_field=None,
+        sort_order="ASC",
+        limit=100,
+    ):
+        params = {"limit": limit, "display": "full"}
+        if is_date_filter:
+            params.update({"date":"1"})
+        if filter_field and filter_operator and filter_value:
+            filter_value = filter_value.replace(" ", "%20")
+            params.update({f"filter[{filter_field}]": f"{filter_operator}[{filter_value}]"})
+        if sort_field:
+            sort = {"sort": f"[{sort_field}_{sort_order}]"}
+            params.update(sort)
+        return self.get("customers/",params=params)
 
     def get(self, endpoint, **kwargs):
         response = self.request("GET", endpoint, **kwargs)
@@ -37,9 +57,13 @@ class Client(object):
     def request(self, method, endpoint, headers=None, params=None, **kwargs):
         if params:
             self.params.update(params)
-        return requests.request(method, self.URL + endpoint, params=self.params, **kwargs)
+        params_string ="?"
+        for param in self.params:
+            params_string += f"{param}={self.params[param]}&"
+        return requests.request(method, self.URL + endpoint + params_string[:-1], **kwargs)
 
     def parse(self, response):
+        print(response.request.url)
         status_code = response.status_code
         if "Content-Type" in response.headers and "application/json" in response.headers["Content-Type"]:
             try:
