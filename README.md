@@ -23,4 +23,11 @@ response = client.list_customers(service, filter_field=None, filter_operator=Non
 # Filter operation options = "!" not equal, "" equal, ">" greater than,"<" less than
 # set is_date_filter to True if you are filtering a date field.
 ```
-
+### List inactive carts
+```
+response = client.list_inactive_carts(inactive_before, inactive_from=None, sort_field=None, sort_order="ASC", limit=100)
+# Checks all carts without an order and inactive before parameter 'inactive_before'.  
+# If 'inactive_from' is added, it will check inactive carts between inactive_from and inactive_before time.  
+# inactive_before and inactive_from format must be: 2023-02-13 13:31:28 (string).  
+# Sort order only works if sort_field is added. 
+```

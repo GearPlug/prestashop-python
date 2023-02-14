@@ -27,11 +27,11 @@ class Client(object):
         """
         Service current options are: "customers", "orders", "carts". \n
         Filter operation options = "!" not equal, "" equal, ">" greater than,"<" less than.\n
-        Set is_date_filter to True if you are filtering a date field.  
+        Set is_date_filter to True if you are filtering a date field.
         """
         params = {"limit": limit, "display": "full"}
         if is_date_filter:
-            params.update({"date":"1"})
+            params.update({"date": "1"})
         if filter_field and filter_operator and filter_value:
             filter_value = filter_value.replace(" ", "%20")
             params.update({f"filter[{filter_field}]": f"{filter_operator}[{filter_value}]"})
@@ -39,13 +39,39 @@ class Client(object):
             sort = {"sort": f"[{sort_field}_{sort_order}]"}
             params.update(sort)
         if service == "customers":
-            return self.get("customers/",params=params)
+            return self.get("customers/", params=params)
         elif service == "orders":
-            return self.get("orders/",params=params)
+            return self.get("orders/", params=params)
         elif service == "carts":
-            return self.get("carts/",params=params)
+            return self.get("carts/", params=params)
         else:
             return f"No {service} service available for search"
+
+    def list_inactive_carts(self, inactive_before, inactive_from=None, sort_field=None, sort_order="ASC", limit=100):
+        """ 
+        Checks all carts without an order and inactive before parameter 'inactive_before'. \n
+        If 'inactive_from' is added, it will check inactive carts between inactive_from and inactive_before time. \n
+        inactive_before and inactive_from format must be: 2023-02-13 13:31:28 (string). \n
+        Sort order only works if sort_field is added. 
+        """
+        params = {
+            "limit": limit,
+            "display": "full",
+            "date": 1,
+            "filter[id_address_delivery]": "[0]",
+            "filter[id_address_invoice]": "[0]",
+        }
+        if sort_field:
+            sort = {"sort": f"[{sort_field}_{sort_order}]"}
+            params.update(sort)
+        if inactive_from:
+            inactive_before = inactive_before.replace(" ", "%20")
+            inactive_from = inactive_from.replace(" ", "%20")
+            params.update({f"filter[date_add]": f"[{inactive_from},{inactive_before}]"})
+        else:
+            filter_value = inactive_before.replace(" ", "%20")
+            params.update({f"filter[date_add]": f"<[{filter_value}]"})
+        return self.get("carts/", params=params)
 
     def get(self, endpoint, **kwargs):
         response = self.request("GET", endpoint, **kwargs)
@@ -70,12 +96,14 @@ class Client(object):
     def request(self, method, endpoint, headers=None, params=None, **kwargs):
         if params:
             self.params.update(params)
-        params_string ="?"
+        params_string = "?"
         for param in self.params:
             params_string += f"{param}={self.params[param]}&"
+        print(params_string)
         return requests.request(method, self.URL + endpoint + params_string[:-1], **kwargs)
 
     def parse(self, response):
+        print(response.request.url)
         status_code = response.status_code
         if "Content-Type" in response.headers and "application/json" in response.headers["Content-Type"]:
             try:
