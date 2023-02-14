@@ -63,7 +63,6 @@ class Client(object):
         return requests.request(method, self.URL + endpoint + params_string[:-1], **kwargs)
 
     def parse(self, response):
-        print(response.request.url)
         status_code = response.status_code
         if "Content-Type" in response.headers and "application/json" in response.headers["Content-Type"]:
             try:

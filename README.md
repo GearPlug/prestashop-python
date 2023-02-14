@@ -15,3 +15,10 @@ client = Client(webservice_key, domain, is_subfolder:bool=None, ssl_certificate:
 ```
 response = client.check_api_features()
 ```
+### List customers
+```
+response = client.list_customers(filter_field=None, filter_operator=None, filter_value=None, is_date_filter=False,
+                                 sort_field=None, sort_order="ASC", limit=100)
+# Filter operation options = "!" not equal, "" equal, ">" greater than,"<" less than
+# set is_date_filter to True if you are filtering a date field.
+```
