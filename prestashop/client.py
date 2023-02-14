@@ -13,8 +13,9 @@ class Client(object):
     def check_api_features(self):
         return self.get("")
 
-    def list_customers(
+    def list_service(
         self,
+        service,
         filter_field=None,
         filter_operator=None,
         filter_value=None,
@@ -23,6 +24,11 @@ class Client(object):
         sort_order="ASC",
         limit=100,
     ):
+        """
+        Service current options are: "customers", "orders", "carts". \n
+        Filter operation options = "!" not equal, "" equal, ">" greater than,"<" less than.\n
+        Set is_date_filter to True if you are filtering a date field.  
+        """
         params = {"limit": limit, "display": "full"}
         if is_date_filter:
             params.update({"date":"1"})
@@ -32,7 +38,14 @@ class Client(object):
         if sort_field:
             sort = {"sort": f"[{sort_field}_{sort_order}]"}
             params.update(sort)
-        return self.get("customers/",params=params)
+        if service == "customers":
+            return self.get("customers/",params=params)
+        elif service == "orders":
+            return self.get("orders/",params=params)
+        elif service == "carts":
+            return self.get("carts/",params=params)
+        else:
+            return f"No {service} service available for search"
 
     def get(self, endpoint, **kwargs):
         response = self.request("GET", endpoint, **kwargs)
