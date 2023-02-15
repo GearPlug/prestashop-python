@@ -32,7 +32,7 @@ class Client(object):
         params = {"limit": limit, "display": "full"}
         if is_date_filter:
             params.update({"date": "1"})
-        if filter_field and filter_operator and filter_value:
+        if filter_field and filter_operator is not None and filter_value:
             filter_value = filter_value.replace(" ", "%20")
             params.update({f"filter[{filter_field}]": f"{filter_operator}[{filter_value}]"})
         if sort_field:
@@ -99,11 +99,9 @@ class Client(object):
         params_string = "?"
         for param in self.params:
             params_string += f"{param}={self.params[param]}&"
-        print(params_string)
         return requests.request(method, self.URL + endpoint + params_string[:-1], **kwargs)
 
     def parse(self, response):
-        print(response.request.url)
         status_code = response.status_code
         if "Content-Type" in response.headers and "application/json" in response.headers["Content-Type"]:
             try:
