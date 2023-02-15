@@ -67,10 +67,10 @@ class Client(object):
         if inactive_from:
             inactive_before = inactive_before.replace(" ", "%20")
             inactive_from = inactive_from.replace(" ", "%20")
-            params.update({f"filter[date_add]": f"[{inactive_from},{inactive_before}]"})
+            params.update({f"filter[date_upd]": f"[{inactive_from},{inactive_before}]"})
         else:
             filter_value = inactive_before.replace(" ", "%20")
-            params.update({f"filter[date_add]": f"<[{filter_value}]"})
+            params.update({f"filter[date_upd]": f"<[{filter_value}]"})
         return self.get("carts/", params=params)
 
     def get(self, endpoint, **kwargs):
