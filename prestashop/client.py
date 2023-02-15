@@ -8,7 +8,7 @@ class Client(object):
         protocol = "https" if ssl_certificate else "http"
         sub_url = "prestashop/api/" if is_subfolder else "api/"
         self.URL = f"{protocol}://{domain}/{sub_url}"
-        self.params = {"output_format": "JSON", "ws_key": webservice_key}
+        self.webservice_key = webservice_key
 
     def check_api_features(self):
         return self.get("")
@@ -94,6 +94,7 @@ class Client(object):
         return self.parse(response)
 
     def request(self, method, endpoint, headers=None, params=None, **kwargs):
+        self.params = {"output_format": "JSON", "ws_key": self.webservice_key}
         if params:
             self.params.update(params)
         params_string = "?"
