@@ -62,8 +62,8 @@ class Client(object):
             "limit": limit,
             "display": "full",
             "date": 1,
-            "filter[id_address_delivery]": "[0]",
-            "filter[id_address_invoice]": "[0]",
+            "filter[id_carrier]": "[0]",
+            "filter[delivery_option]": "[]",
         }
         if sort_field:
             sort = {"sort": f"[{sort_field}_{sort_order}]"}
