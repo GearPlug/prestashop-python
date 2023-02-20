@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name="prestashop-python",
-    version="0.1.0",
+    version="0.1.1",
     description="API wrapper for Prestashop written in Python",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
