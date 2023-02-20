@@ -29,7 +29,7 @@ class Client(object):
         limit=100,
     ):
         """
-        Service current options are: "customers", "orders", "carts". \n
+        Service current options are: "customers", "orders", "carts", "addresses", "countries", "states" \n
         Filter operation options = "!" not equal, "" equal, ">" greater than,"<" less than.\n
         Set is_date_filter to True if you are filtering a date field.
         """
@@ -48,6 +48,12 @@ class Client(object):
             return self.get("orders/", params=params)
         elif service == "carts":
             return self.get("carts/", params=params)
+        elif service == "addresses":
+            return self.get("addresses/", params=params)
+        elif service == "countries":
+            return self.get("countries/", params=params)
+        elif service == "states":
+            return self.get("states/", params=params)
         else:
             return f"No {service} service available for search"
 
