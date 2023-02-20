@@ -108,8 +108,6 @@ class Client(object):
 
     def parse(self, response):
         status_code = response.status_code
-        print(status_code)
-        print(response.request.url)
         if "Content-Type" in response.headers and "application/json" in response.headers["Content-Type"]:
             try:
                 r = response.json()
@@ -117,7 +115,6 @@ class Client(object):
                 r = response.text
         else:
             r = response.text
-        # print("response", r)
         if status_code == 200:
             return r
         if status_code == 204:
