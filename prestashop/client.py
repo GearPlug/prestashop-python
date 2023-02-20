@@ -4,11 +4,15 @@ from prestashop.exceptions import UnauthorizedError, WrongFormatInputError, Cont
 
 
 class Client(object):
-    def __init__(self, webservice_key, domain, is_subfolder: bool = False, ssl_certificate: bool = False):
-        protocol = "https" if ssl_certificate else "http"
-        sub_url = "prestashop/api/" if is_subfolder else "api/"
-        self.URL = f"{protocol}://{domain}/{sub_url}"
+    def __init__(self, webservice_key, domain):
         self.webservice_key = webservice_key
+        if not domain.startswith("http://") and not domain.startswith("https://"):
+            domain = f"https://{domain}"
+        try:
+            self.URL = f"{domain}/api/"
+            self.check_api_features()
+        except AttributeError:
+            self.URL = f"{domain}/prestashop/api/"
 
     def check_api_features(self):
         return self.get("")
@@ -104,6 +108,8 @@ class Client(object):
 
     def parse(self, response):
         status_code = response.status_code
+        print(status_code)
+        print(response.request.url)
         if "Content-Type" in response.headers and "application/json" in response.headers["Content-Type"]:
             try:
                 r = response.json()
@@ -111,6 +117,7 @@ class Client(object):
                 r = response.text
         else:
             r = response.text
+        # print("response", r)
         if status_code == 200:
             return r
         if status_code == 204:
