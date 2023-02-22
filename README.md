@@ -8,8 +8,7 @@ pip install prestashop-python
 ```
 ## Usage
 ```
-client = Client(webservice_key, domain, is_subfolder:bool=None, ssl_certificate:bool=None)
-# domain : Don't include https:// prefix and trailing slash / ex:(mydomain.com)
+client = Client(webservice_key, domain)
 ```
 ### Check API features
 ```
