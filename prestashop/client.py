@@ -42,20 +42,10 @@ class Client(object):
         if sort_field:
             sort = {"sort": f"[{sort_field}_{sort_order}]"}
             params.update(sort)
-        if service == "customers":
-            return self.get("customers/", params=params)
-        elif service == "orders":
-            return self.get("orders/", params=params)
-        elif service == "carts":
-            return self.get("carts/", params=params)
-        elif service == "addresses":
-            return self.get("addresses/", params=params)
-        elif service == "countries":
-            return self.get("countries/", params=params)
-        elif service == "states":
-            return self.get("states/", params=params)
-        else:
-            return f"No {service} service available for search"
+        try:
+            return self.get(f"{service}/", params=params)
+        except WrongFormatInputError as e:
+            return e
 
     def list_inactive_carts(self, inactive_before, inactive_from=None, sort_field=None, sort_order="ASC", limit=100):
         """ 
