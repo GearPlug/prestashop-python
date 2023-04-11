@@ -15,14 +15,15 @@ client = Client(webservice_key, domain)
 ```
 response = client.check_api_features()
 ```
-### List service (customers, orders, carts, countries, states and addresses)
+### List service (customers, orders, carts, countries, states...)
 ```
-response = client.list_customers(service, filter_field=None, filter_operator=None, filter_value=None, is_date_filter=False,
+response = client.list_service(service, filter_field=None, filter_operator=None, filter_value=None, is_date_filter=False,
                                  sort_field=None, sort_order="ASC", limit=100)
-# Service current options are: "customers", "orders", "carts", "countries", "states", "addresses"
+# Some service options are: "customers", "orders", "carts", "countries", "states", "addresses"
 # Filter operation options = "!" not equal, "" equal, ">" greater than,"<" less than
 # set is_date_filter to True if you are filtering a date field.
 ```
+For a full list of available services, check: https://devdocs.prestashop-project.org/8/webservice/resources/
 ### List inactive carts
 ```
 response = client.list_inactive_carts(inactive_before, inactive_from=None, sort_field=None, sort_order="ASC", limit=100)

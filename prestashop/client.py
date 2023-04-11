@@ -29,7 +29,6 @@ class Client(object):
         limit=100,
     ):
         """
-        Service current options are: "customers", "orders", "carts", "addresses", "countries", "states" \n
         Filter operation options = "!" not equal, "" equal, ">" greater than,"<" less than.\n
         Set is_date_filter to True if you are filtering a date field.
         """
